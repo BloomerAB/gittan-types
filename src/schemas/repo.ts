@@ -59,6 +59,13 @@ export const GittanYamlSchema = z.object({
       template: z.enum(["compact", "detailed"]).default("compact"),
     })).optional(),
   }).optional(),
+
+  links: z.object({
+    docs: z.string().url().optional(),
+    grafana: z.string().url().optional(),
+    status: z.string().url().optional(),
+    homepage: z.string().url().optional(),
+  }).optional(),
 })
 
 export type TGittanYaml = z.infer<typeof GittanYamlSchema>
