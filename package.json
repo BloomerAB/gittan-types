@@ -1,5 +1,5 @@
 {
-  "name": "@gittan/types",
+  "name": "@bloomerab/gittan-types",
   "version": "0.1.0",
   "type": "module",
   "exports": {
