@@ -47,3 +47,11 @@ export {
   type TStepResult,
   type TPipelineRun,
 } from "./schemas/events.js"
+
+export {
+  GatedConfigSchema,
+  DependencySchema,
+  GittanYamlSchema,
+  type TDependency,
+  type TGittanYaml,
+} from "./schemas/repo.js"
