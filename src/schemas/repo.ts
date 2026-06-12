@@ -62,3 +62,48 @@ export const GittanYamlSchema = z.object({
 })
 
 export type TGittanYaml = z.infer<typeof GittanYamlSchema>
+
+const IMAGE_TAG_PATTERN = /^\d{8}-\d{6}-[a-f0-9]{7,40}$/
+
+export const ImageTagSchema = z
+  .string()
+  .min(1)
+  .refine(
+    (tag) => tag !== "latest",
+    { message: "Tag 'latest' is not allowed. Use YYYYMMDD-HHMMSS-sha format." },
+  )
+  .refine(
+    (tag) => IMAGE_TAG_PATTERN.test(tag),
+    { message: "Tag must match YYYYMMDD-HHMMSS-sha format (e.g. 20260612-143022-a1b2c3d)." },
+  )
+
+export const generateImageTag = (sha: string, date: Date = new Date()): string => {
+  const y = date.getUTCFullYear()
+  const mo = String(date.getUTCMonth() + 1).padStart(2, "0")
+  const d = String(date.getUTCDate()).padStart(2, "0")
+  const h = String(date.getUTCHours()).padStart(2, "0")
+  const mi = String(date.getUTCMinutes()).padStart(2, "0")
+  const s = String(date.getUTCSeconds()).padStart(2, "0")
+  const shortSha = sha.slice(0, 7)
+  return `${y}${mo}${d}-${h}${mi}${s}-${shortSha}`
+}
+
+export type TImageTag = z.infer<typeof ImageTagSchema>
+
+export const OrgSettingsSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1).max(64).regex(/^[a-z0-9-]+$/),
+  displayName: z.string().min(1).max(128),
+  oidc: z.object({
+    issuer: z.string().url(),
+    clientId: z.string().min(1),
+    scimEnabled: z.boolean().default(false),
+    mandatorySso: z.boolean().default(false),
+  }).optional(),
+  imageTagFormat: z.enum(["date-sha"]).default("date-sha"),
+  allowLatestTag: z.boolean().default(false),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+})
+
+export type TOrgSettings = z.infer<typeof OrgSettingsSchema>

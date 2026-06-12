@@ -52,6 +52,11 @@ export {
   GatedConfigSchema,
   DependencySchema,
   GittanYamlSchema,
+  ImageTagSchema,
+  generateImageTag,
+  OrgSettingsSchema,
   type TDependency,
   type TGittanYaml,
+  type TImageTag,
+  type TOrgSettings,
 } from "./schemas/repo.js"
