@@ -1,0 +1,62 @@
+import { z } from "zod"
+
+export const StepServiceSchema = z.object({
+  image: z.string().min(1),
+  env: z.record(z.string()).optional(),
+})
+
+export type TStepService = z.infer<typeof StepServiceSchema>
+
+export const PipelineStepSchema = z.object({
+  name: z
+    .string()
+    .min(1)
+    .max(64)
+    .regex(/^[a-z0-9-]+$/),
+  image: z.string().min(1).optional(),
+  use: z.string().min(1).optional(),
+  with: z.record(z.string()).optional(),
+  run: z.string().optional(),
+  needs: z.array(z.string()).optional(),
+  only: z.string().optional(),
+  cache: z.array(z.string()).optional(),
+  artifacts: z.array(z.string()).optional(),
+  secrets: z.array(z.string()).optional(),
+  services: z.array(z.union([z.string(), StepServiceSchema])).optional(),
+  timeout: z.string().default("10m"),
+})
+
+export type TPipelineStep = z.infer<typeof PipelineStepSchema>
+
+export const ReviewStepSchema = z.object({
+  name: z.literal("review"),
+  require: z.number().int().min(1).default(1),
+  from: z.enum(["writers", "admins"]).default("writers"),
+  autoAssign: z.enum(["blame", "round-robin", "none"]).default("blame"),
+  needs: z.array(z.string()).optional(),
+  skipFor: z.array(z.string()).optional(),
+})
+
+export type TReviewStep = z.infer<typeof ReviewStepSchema>
+
+export const NotifyChannelSchema = z.object({
+  channel: z.enum(["team-slack", "author", "webhook"]),
+  target: z.string().optional(),
+  template: z.enum(["compact", "detailed"]).default("compact"),
+})
+
+export type TNotifyChannel = z.infer<typeof NotifyChannelSchema>
+
+export const NotifyConfigSchema = z.object({
+  onFailure: z.array(NotifyChannelSchema).optional(),
+  onReviewNeeded: z.array(NotifyChannelSchema).optional(),
+})
+
+export type TNotifyConfig = z.infer<typeof NotifyConfigSchema>
+
+export const PipelineConfigSchema = z.object({
+  steps: z.array(z.union([PipelineStepSchema, ReviewStepSchema])).min(1),
+  notify: NotifyConfigSchema.optional(),
+})
+
+export type TPipelineConfig = z.infer<typeof PipelineConfigSchema>

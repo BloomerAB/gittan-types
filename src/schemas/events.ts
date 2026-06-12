@@ -1,0 +1,62 @@
+import { z } from "zod"
+
+export const CommitSchema = z.object({
+  sha: z.string().length(40),
+  message: z.string().min(1),
+  author: z.string().min(1),
+  timestamp: z.string().datetime(),
+})
+
+export type TCommit = z.infer<typeof CommitSchema>
+
+export const PushEventSchema = z.object({
+  id: z.string().min(1),
+  orgId: z.string().min(1),
+  teamId: z.string().min(1),
+  repoId: z.string().min(1),
+  repoName: z.string().min(1),
+  branch: z.string().min(1),
+  commits: z.array(CommitSchema).min(1),
+  pusher: z.string().min(1),
+  timestamp: z.string().datetime(),
+})
+
+export type TPushEvent = z.infer<typeof PushEventSchema>
+
+export const StepResultStatus = z.enum(["pending", "running", "passed", "failed", "skipped", "waiting-review"])
+
+export type TStepResultStatus = z.infer<typeof StepResultStatus>
+
+export const StepResultSchema = z.object({
+  stepName: z.string().min(1),
+  status: StepResultStatus,
+  startedAt: z.string().datetime().optional(),
+  finishedAt: z.string().datetime().optional(),
+  durationMs: z.number().int().min(0).optional(),
+  exitCode: z.number().int().optional(),
+  logUrl: z.string().url().optional(),
+  error: z.string().optional(),
+  source: z.enum(["repo", "policy", "template"]),
+})
+
+export type TStepResult = z.infer<typeof StepResultSchema>
+
+export const PipelineRunSchema = z.object({
+  id: z.string().min(1),
+  pushEventId: z.string().min(1),
+  orgId: z.string().min(1),
+  teamId: z.string().min(1),
+  repoId: z.string().min(1),
+  branch: z.string().min(1),
+  status: z.enum(["pending", "running", "passed", "failed"]),
+  steps: z.array(StepResultSchema),
+  startedAt: z.string().datetime(),
+  finishedAt: z.string().datetime().optional(),
+  resolvedFrom: z.object({
+    policies: z.array(z.string()),
+    template: z.string().optional(),
+    repoConfig: z.boolean(),
+  }),
+})
+
+export type TPipelineRun = z.infer<typeof PipelineRunSchema>
