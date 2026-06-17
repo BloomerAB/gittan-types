@@ -49,6 +49,18 @@ export {
 } from "./schemas/events.js"
 
 export {
+  PlanTypeSchema,
+  OrgPlanSchema,
+  PLAN_LIMITS,
+  UsageEventSchema,
+  OrgUsageSchema,
+  type TPlanType,
+  type TOrgPlan,
+  type TUsageEvent,
+  type TOrgUsage,
+} from "./schemas/usage.js"
+
+export {
   GatedConfigSchema,
   DependencySchema,
   GittanYamlSchema,
