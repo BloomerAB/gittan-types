@@ -18,15 +18,6 @@ export const TeamMemberSchema = z.object({
 
 export type TTeamMember = z.infer<typeof TeamMemberSchema>
 
-export const TopologySchema = z.enum([
-  "stream-aligned",
-  "platform",
-  "enabling",
-  "complicated-subsystem",
-])
-
-export type TTopology = z.infer<typeof TopologySchema>
-
 export const TeamSchema = z.object({
   id: z.string().min(1),
   orgId: z.string().min(1),
@@ -36,7 +27,6 @@ export const TeamSchema = z.object({
     .max(64)
     .regex(/^[a-z0-9-]+$/),
   displayName: z.string().min(1).max(128),
-  topology: TopologySchema.default("stream-aligned"),
   slackChannel: z.string().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
