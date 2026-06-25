@@ -22,7 +22,7 @@ export type TOrgPlan = z.infer<typeof OrgPlanSchema>
 
 export const PLAN_LIMITS = {
   personal: {
-    ciMinutesLimit: 500,
+    ciMinutesLimit: 50,
     storageLimitGb: 5,
     userLimit: 1,
     teamLimit: 1,
