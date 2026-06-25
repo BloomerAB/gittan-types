@@ -13,7 +13,7 @@ export const OrgPlanSchema = z.object({
   userLimit: z.number().int().min(0),
   teamLimit: z.number().int().min(0),
   repoLimit: z.number().int().min(0),
-  billingEmail: z.string().email().optional(),
+  receiptEmail: z.string().email().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 })
