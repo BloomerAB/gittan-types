@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const PlanTypeSchema = z.enum(["starter", "team"])
+export const PlanTypeSchema = z.enum(["personal", "starter", "team"])
 
 export type TPlanType = z.infer<typeof PlanTypeSchema>
 
@@ -13,6 +13,7 @@ export const OrgPlanSchema = z.object({
   userLimit: z.number().int().min(0),
   teamLimit: z.number().int().min(0),
   repoLimit: z.number().int().min(0),
+  billingEmail: z.string().email().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 })
@@ -20,12 +21,19 @@ export const OrgPlanSchema = z.object({
 export type TOrgPlan = z.infer<typeof OrgPlanSchema>
 
 export const PLAN_LIMITS = {
+  personal: {
+    ciMinutesLimit: 500,
+    storageLimitGb: 5,
+    userLimit: 1,
+    teamLimit: 1,
+    repoLimit: 5,
+  },
   starter: {
     ciMinutesLimit: 2_000,
     storageLimitGb: 20,
-    userLimit: 2,
-    teamLimit: 2,
-    repoLimit: 10,
+    userLimit: 5,
+    teamLimit: 3,
+    repoLimit: 20,
   },
   team: {
     ciMinutesLimit: 10_000,
@@ -35,6 +43,8 @@ export const PLAN_LIMITS = {
     repoLimit: 0,
   },
 } as const
+
+export type TPlanLimits = typeof PLAN_LIMITS[TPlanType]
 
 export const UsageEventSchema = z.object({
   orgId: z.string().min(1),

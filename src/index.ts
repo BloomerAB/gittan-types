@@ -55,6 +55,7 @@ export {
   UsageEventSchema,
   OrgUsageSchema,
   type TPlanType,
+  type TPlanLimits,
   type TOrgPlan,
   type TUsageEvent,
   type TOrgUsage,
