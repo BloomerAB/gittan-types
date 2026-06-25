@@ -8,7 +8,7 @@ export const OrgPlanSchema = z.object({
   orgId: z.string().min(1),
   plan: PlanTypeSchema,
   ciMinutesLimit: z.number().int().min(0),
-  blocks: z.number().int().min(0).default(0),
+  spendingCapEur: z.number().int().min(0).default(0),
   storageLimitGb: z.number().int().min(0),
   aiEnabled: z.boolean(),
   receiptEmail: z.string().email().optional(),
@@ -36,10 +36,15 @@ export const PLAN_LIMITS = {
   },
 } as const
 
+export const BLOCK_PRICE_EUR = 79 as const
+
 export const BLOCK_ADDITIONS = {
   ciMinutes: 10_000,
   storageGb: 10,
 } as const
+
+export const spendingCapToBlocks = (capEur: number): number =>
+  Math.floor(capEur / BLOCK_PRICE_EUR)
 
 export type TPlanLimits = typeof PLAN_LIMITS[TPlanType]
 
