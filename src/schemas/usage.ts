@@ -36,7 +36,7 @@ export const PLAN_LIMITS = {
   },
 } as const
 
-export const BLOCK_PRICE_EUR = 79 as const
+export const BLOCK_PRICE_EUR = 129 as const
 
 export const BLOCK_ADDITIONS = {
   ciMinutes: 10_000,
