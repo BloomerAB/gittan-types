@@ -52,6 +52,7 @@ export {
   PlanTypeSchema,
   OrgPlanSchema,
   PLAN_LIMITS,
+  BLOCK_ADDITIONS,
   UsageEventSchema,
   OrgUsageSchema,
   type TPlanType,
