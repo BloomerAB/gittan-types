@@ -15,10 +15,15 @@ export const GittanYamlSchema = z.object({
   steps: z.array(z.union([
     z.object({
       name: z.string().min(1).max(64).regex(/^[a-z0-9-]+$/),
+      description: z.string().max(200).optional(),
       image: z.string().min(1).optional(),
       use: z.string().min(1).optional(),
       with: z.record(z.string()).optional(),
       run: z.string().optional(),
+      publish: z.object({
+        registry: z.string().min(1),
+        dockerfile: z.string().default("Dockerfile"),
+      }).optional(),
       needs: z.array(z.string()).optional(),
       only: z.string().optional(),
       cache: z.array(z.string()).optional(),
