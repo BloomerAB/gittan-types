@@ -1,16 +1,45 @@
 steps:
+  - name: install
+    description: Install dependencies
+    image: gittan/node:22
+    run: pnpm install --frozen-lockfile
+    cache:
+      - node_modules
+
   - name: typecheck
+    description: Type-check TypeScript
     image: gittan/node:22
     run: pnpm typecheck
+    needs: [install]
 
   - name: test
+    description: Run unit tests
     image: gittan/node:22
     run: pnpm test
+    needs: [install]
 
   - name: build
+    description: Compile TypeScript
     image: gittan/node:22
     run: pnpm build
     needs: [typecheck, test]
+
+  - name: publish
+    description: Publish to npm registry
+    image: gittan/node:22
+    run: |
+      echo "//npm.gittan.eu/:_authToken=${REGISTRY_TOKEN}" >> .npmrc
+      CURRENT=$(node -p "require('./package.json').version")
+      EXISTING=$(npm view "@gittan/types@${CURRENT}" version --registry=https://npm.gittan.eu 2>/dev/null || true)
+      if [ "${EXISTING}" = "${CURRENT}" ]; then
+        echo "v${CURRENT} already published, skipping"
+      else
+        pnpm publish --no-git-checks
+        echo "Published @gittan/types@${CURRENT}"
+      fi
+    needs: [build]
+    only: main
+    secrets: [REGISTRY_TOKEN]
 
 gated:
   - main
