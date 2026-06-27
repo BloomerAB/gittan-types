@@ -19,7 +19,7 @@ export const PipelineStepSchema = z.object({
   with: z.record(z.string()).optional(),
   run: z.string().optional(),
   publish: z.object({
-    registry: z.string().min(1),
+    image: z.string().min(1),
     dockerfile: z.string().default("Dockerfile"),
   }).optional(),
   needs: z.array(z.string()).optional(),
