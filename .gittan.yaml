@@ -28,6 +28,7 @@ steps:
     description: Publish to npm registry
     image: gittan/node:22
     run: |
+      set -e
       echo "//npm.gittan.eu/:_authToken=${REGISTRY_TOKEN}" >> .npmrc
       CURRENT=$(node -p "require('./package.json').version")
       EXISTING=$(npm view "@gittan/types@${CURRENT}" version --registry=https://npm.gittan.eu 2>/dev/null || true)
